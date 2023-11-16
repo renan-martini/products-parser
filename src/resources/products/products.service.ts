@@ -23,15 +23,15 @@ export class ProductsService {
     return this.productRepository.findMany(skip || 0, limit || 8);
   }
 
-  findOne(code: number) {
+  async findOne(code: number): Promise<CreateProductDto> {
     return this.productRepository.findOne(code);
   }
 
-  update(code: number, _updateProductDto: UpdateProductDto) {
-    return `This action updates a #${code} product`;
+  async update(code: number, updateProductDto: UpdateProductDto) {
+    return this.productRepository.update(code, updateProductDto);
   }
 
-  remove(code: number) {
+  async remove(code: number): Promise<CreateProductDto> {
     return this.productRepository.delete(code);
   }
 

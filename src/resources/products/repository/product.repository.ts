@@ -3,6 +3,7 @@ import { CreateProductDto } from '../dto/create-product.dto';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, UpdateWriteOpResult } from 'mongoose';
 import { Product } from '../schemas/product.entity';
+import { UpdateProductDto } from '../dto/update-product.dto';
 
 @Injectable()
 export class ProductRepository {
@@ -65,6 +66,12 @@ export class ProductRepository {
       lastPage,
       products,
     };
+  }
+
+  async update(code: number, data: UpdateProductDto) {
+    await this.productModel.findOneAndUpdate({ code }, data);
+    const product = this.productModel.findOne({ code });
+    return product;
   }
 
   async clearCollection() {
