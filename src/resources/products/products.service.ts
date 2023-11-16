@@ -16,11 +16,11 @@ export class ProductsService {
     private schedulerRegistry: SchedulerRegistry,
   ) {}
   async create(createProductDto: CreateProductDto) {
-    await this.productRepository.saveProduct(createProductDto);
+    return await this.productRepository.saveProduct(createProductDto);
   }
 
-  async findAll() {
-    //await processData();
+  async findAll(limit: number, skip: number) {
+    return this.productRepository.findMany(skip || 0, limit || 8);
   }
 
   findOne(code: number) {
