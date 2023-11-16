@@ -3,11 +3,11 @@ import {
   Get,
   Post,
   Body,
-  Patch,
   Param,
   Delete,
   UseInterceptors,
   Query,
+  Put,
 } from '@nestjs/common';
 import { ProductsService } from './products.service';
 import { CreateProductDto } from './dto/create-product.dto';
@@ -35,7 +35,7 @@ export class ProductsController {
     return this.productsService.findOne(+code);
   }
 
-  @Patch(':code')
+  @Put(':code')
   update(
     @Param('code') code: string,
     @Body() updateProductDto: UpdateProductDto,
