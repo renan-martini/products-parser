@@ -7,11 +7,13 @@ import {
   Param,
   Delete,
   UseInterceptors,
+  Query,
 } from '@nestjs/common';
 import { ProductsService } from './products.service';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { NotFoundInterceptor } from 'src/interceptors/notFound.interceptor';
+import { PaginationParams } from './dto/paginationParams.dto';
 
 @Controller('products')
 export class ProductsController {
@@ -23,8 +25,8 @@ export class ProductsController {
   }
 
   @Get()
-  findAll() {
-    return this.productsService.findAll();
+  findAll(@Query() { limit, skip }: PaginationParams) {
+    return this.productsService.findAll(+limit, +skip);
   }
 
   @Get(':code')

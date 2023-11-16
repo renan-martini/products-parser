@@ -42,6 +42,31 @@ export class ProductRepository {
     return product;
   }
 
+  async findMany(skip: number, limit: number) {
+    const count = await this.productModel.find().countDocuments();
+    const page_total = Math.floor((count - 1) / limit) + 1;
+    const products = await this.productModel
+      .find()
+      .sort({ code: 1 })
+      .skip(skip)
+      .limit(limit)
+      .exec();
+
+    const lastPage =
+      skip > 0
+        ? `/products?skip=${skip - limit < 0 ? 0 : skip - limit}&limit=${limit}`
+        : null;
+
+    return {
+      page_total: page_total,
+      total: count,
+      status: 200,
+      nextPage: `/products?skip=${skip + limit}&limit=${limit}`,
+      lastPage,
+      products,
+    };
+  }
+
   async clearCollection() {
     await this.productModel.deleteMany();
   }
