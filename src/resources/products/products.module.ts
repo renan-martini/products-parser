@@ -7,6 +7,7 @@ import { ProductSchema } from './schemas/product.entity';
 import { ImportHistoryRepository } from './repository/importHistory.repository';
 import { HistorySchema } from './schemas/history.entity';
 import { ScheduleModule } from '@nestjs/schedule';
+import { SearchModule } from '../search/search.module';
 
 @Module({
   imports: [
@@ -15,6 +16,7 @@ import { ScheduleModule } from '@nestjs/schedule';
       { name: 'history', schema: HistorySchema },
     ]),
     ScheduleModule.forRoot(),
+    SearchModule,
   ],
   controllers: [ProductsController],
   providers: [ProductRepository, ImportHistoryRepository, ProductsService],

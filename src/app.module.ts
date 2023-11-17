@@ -7,7 +7,7 @@ import { TerminusModule } from '@nestjs/terminus';
 import { ImportHistoryRepository } from './resources/products/repository/importHistory.repository';
 import { HistorySchema } from './resources/products/schemas/history.entity';
 import { HealthService } from './app.service';
-
+import { SearchModule } from './resources/search/search.module';
 @Module({
   imports: [
     ConfigModule.forRoot({ envFilePath: './.env', isGlobal: true }),
@@ -17,6 +17,7 @@ import { HealthService } from './app.service';
     ),
     MongooseModule.forFeature([{ name: 'history', schema: HistorySchema }]),
     TerminusModule,
+    SearchModule,
   ],
   controllers: [HealthController],
   providers: [ImportHistoryRepository, HealthService],

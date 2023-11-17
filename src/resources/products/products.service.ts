@@ -7,13 +7,15 @@ import { ImportHistoryRepository } from './repository/importHistory.repository';
 import { TimeUtility } from 'src/utils/Time.utility';
 import { SchedulerRegistry } from '@nestjs/schedule';
 import { CronJob } from 'cron';
+import { SearchService } from '../search/search.service';
 
 @Injectable()
 export class ProductsService {
   constructor(
     private readonly productRepository: ProductRepository,
     private readonly importHistoryRepository: ImportHistoryRepository,
-    private schedulerRegistry: SchedulerRegistry,
+    private readonly schedulerRegistry: SchedulerRegistry,
+    private readonly searchService: SearchService,
   ) {}
   async create(createProductDto: CreateProductDto) {
     return await this.productRepository.saveProduct(createProductDto);
@@ -28,11 +30,19 @@ export class ProductsService {
   }
 
   async update(code: number, updateProductDto: UpdateProductDto) {
-    return this.productRepository.update(code, updateProductDto);
+    const { _id, ...updatedProduct } = (
+      await this.productRepository.update(code, updateProductDto)
+    ).toObject();
+    await this.searchService.indexProduct(updatedProduct);
+    return updatedProduct;
   }
 
   async remove(code: number): Promise<CreateProductDto> {
-    return this.productRepository.delete(code);
+    const { _id, ...deleted } = (
+      await this.productRepository.delete(code)
+    ).toObject();
+    await this.searchService.indexProduct(deleted);
+    return deleted;
   }
 
   async saveData() {
@@ -43,6 +53,7 @@ export class ProductsService {
       await DataProcessor.processData(
         this.productRepository,
         this.importHistoryRepository,
+        this.searchService,
       );
     } else {
       console.log(
@@ -63,6 +74,7 @@ export class ProductsService {
         await DataProcessor.processData(
           this.productRepository,
           this.importHistoryRepository,
+          this.searchService,
         );
       },
       null,
@@ -76,5 +88,6 @@ export class ProductsService {
   async onModuleInit() {
     this.saveData();
     this.createCronJob();
+    //this.searchService.removeAll();
   }
 }
