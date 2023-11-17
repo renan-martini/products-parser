@@ -1,0 +1,25 @@
+version: '3.7'
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: products-parser-docker
+    # container name
+    container_name: products-parser
+    # always restart the container if it stops.
+    restart: always
+    # docker run -t is allow
+    tty: true
+    # application port, this is take value from env file
+    ports:
+      - '${SERVER_PORT}:${SERVER_PORT}'
+    # working directory
+    working_dir: /var/www/products-parser
+    # application environment
+    env_file:
+      - .env
+    # save (persist) data and also to share data between containers
+    volumes:
+      - ./:/var/www/products-parser
+      - /var/www/products-parser/node_modules

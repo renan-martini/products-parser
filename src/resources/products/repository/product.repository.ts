@@ -70,7 +70,7 @@ export class ProductRepository {
 
   async update(code: number, data: UpdateProductDto) {
     await this.productModel.findOneAndUpdate({ code }, data);
-    const product = this.productModel.findOne({ code });
+    const product = await this.productModel.findOne({ code });
     return product;
   }
 

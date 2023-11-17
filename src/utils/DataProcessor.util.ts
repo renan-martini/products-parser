@@ -9,6 +9,7 @@ import es from 'event-stream';
 import * as zlib from 'zlib';
 import { CreateProductDto } from 'src/resources/products/dto/create-product.dto';
 import { ImportHistoryRepository } from 'src/resources/products/repository/importHistory.repository';
+import { SearchService } from 'src/resources/search/search.service';
 
 export class DataProcessor {
   private static baseUrl = 'https://challenges.coode.sh/food/data/json/';
@@ -65,7 +66,11 @@ export class DataProcessor {
     return this.downloadFile(`${this.baseUrl}${file}`, `temp/${file}`);
   };
 
-  static saveOnDB = async (repository: ProductRepository, file: string) => {
+  static saveOnDB = async (
+    repository: ProductRepository,
+    file: string,
+    searchService: SearchService,
+  ) => {
     let arrayToInsert = [];
 
     let objectCounter = 0;
@@ -88,12 +93,16 @@ export class DataProcessor {
           );
 
           await repository.upsertMany(arrayToInsert);
+          await Promise.all(
+            arrayToInsert.map(async (item, i) => {
+              if (i < 100) return searchService.indexProduct(item);
+            }),
+          );
           arrayToInsert = [];
           objectCounter++;
 
-          await radash.sleep(100);
-
           stream.destroy();
+          await radash.sleep(100);
         }
         stream.resume();
       }),
@@ -103,6 +112,7 @@ export class DataProcessor {
   static processData = async (
     repository: ProductRepository,
     historyRepository: ImportHistoryRepository,
+    searchService: SearchService,
   ) => {
     let files = [];
     await axios
@@ -131,11 +141,12 @@ export class DataProcessor {
     try {
       readdir('temp', async (err, compFiles) => {
         console.log('\nSending to atlas...\n');
+
         await Promise.all(
           compFiles
             .filter((compFile) => compFile.endsWith('.json'))
             .map((compFile) => {
-              return this.saveOnDB(repository, compFile);
+              return this.saveOnDB(repository, compFile, searchService);
             }),
         );
         rm(`temp/`, { recursive: true, force: true }, () => {});
