@@ -10,7 +10,7 @@ import { HealthService } from './app.service';
 import { SearchModule } from './resources/search/search.module';
 @Module({
   imports: [
-    ConfigModule.forRoot({ envFilePath: './.env', isGlobal: true }),
+    ConfigModule.forRoot({ envFilePath: '.env', isGlobal: true }),
     ProductsModule,
     MongooseModule.forRoot(
       `mongodb+srv://${process.env.MONGO_USERNAME}:${process.env.MONGO_PASS}@cluster0.ku3maxu.mongodb.net/?retryWrites=true&w=majority`,
