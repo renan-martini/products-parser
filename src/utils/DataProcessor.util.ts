@@ -10,6 +10,7 @@ import * as zlib from 'zlib';
 import { CreateProductDto } from 'src/resources/products/dto/create-product.dto';
 import { ImportHistoryRepository } from 'src/resources/products/repository/importHistory.repository';
 import { SearchService } from 'src/resources/search/search.service';
+import { NodemailerService } from './Nodemailer.util';
 
 export class DataProcessor {
   private static baseUrl = 'https://challenges.coode.sh/food/data/json/';
@@ -32,8 +33,7 @@ export class DataProcessor {
               resolve(true);
             });
         });
-      })
-      .catch((error) => console.log(error));
+      });
   }
 
   private static unzipFiles = async (filePath: string) => {
@@ -114,13 +114,6 @@ export class DataProcessor {
     historyRepository: ImportHistoryRepository,
     searchService: SearchService,
   ) => {
-    let files = [];
-    await axios
-      .get(`${this.baseUrl}index.txt`, {
-        responseType: 'text',
-      })
-      .then((res) => (files = res.data.split('\n')));
-
     try {
       readdirSync('temp');
     } catch (error) {
@@ -128,18 +121,26 @@ export class DataProcessor {
     }
     console.log('\nDownloading database...');
 
-    await Promise.all(
-      files.map((file) => {
-        if (file) {
-          return this.processFile(file);
-        }
-      }),
-    );
-    console.log('Download complete.\n');
-    console.log('Unzipping...');
-    await this.unzipFiles('temp');
     try {
-      readdir('temp', async (err, compFiles) => {
+      let files = [];
+
+      await axios
+        .get(`${this.baseUrl}index.txt`, {
+          responseType: 'text',
+        })
+        .then((res) => (files = res.data.split('\n')));
+
+      await Promise.all(
+        files.map((file) => {
+          if (file) {
+            return this.processFile(file);
+          }
+        }),
+      );
+      console.log('Download complete.\n');
+      console.log('Unzipping...');
+      await this.unzipFiles('temp');
+      readdir('temp', async (_err, compFiles) => {
         console.log('\nSending to atlas...\n');
 
         await Promise.all(
@@ -152,8 +153,21 @@ export class DataProcessor {
         rm(`temp/`, { recursive: true, force: true }, () => {});
         historyRepository.savehistory();
         console.log('Database updated successfully!!');
-        setTimeout(() => console.clear(), 3000);
+        setTimeout(() => {
+          console.clear();
+          console.log('Database updated successfully');
+        }, 3000);
       });
-    } catch (err) {}
+    } catch (err) {
+      // If happens an error during products sync, sends an email for someone to deal with the problem
+
+      console.log(
+        'An error has ocurred during db sync and an email has been sent',
+      );
+      await NodemailerService.sendEmail(
+        'Error during products sync',
+        `An error ocurred during the syncronization of the database: \n\n ${err.message}`,
+      );
+    }
   };
 }

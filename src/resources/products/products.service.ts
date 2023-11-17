@@ -84,10 +84,8 @@ export class ProductsService {
 
     this.schedulerRegistry.addCronJob('updateDataBase', job);
   }
-
   async onModuleInit() {
     this.saveData();
     this.createCronJob();
-    //this.searchService.removeAll();
   }
 }
