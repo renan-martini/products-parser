@@ -9,12 +9,7 @@ import {
 import { SearchService } from './search.service';
 import { SearchParam } from '../products/dto/search.dto';
 import { CreateProductDto } from '../products/dto/create-product.dto';
-import {
-  ApiOperation,
-  ApiQuery,
-  ApiResponse,
-  getSchemaPath,
-} from '@nestjs/swagger';
+import { ApiOperation, ApiResponse, getSchemaPath } from '@nestjs/swagger';
 
 @Controller('search')
 export class SearchController {

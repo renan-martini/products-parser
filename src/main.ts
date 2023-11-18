@@ -12,7 +12,7 @@ async function bootstrap() {
 
   const config = new DocumentBuilder()
     .setTitle('Products Parser API')
-    .setDescription('API Documentation for the Products Parser API')
+    .setDescription('API Documentation for the Products Parser')
     .setVersion('1.0')
     .build();
 

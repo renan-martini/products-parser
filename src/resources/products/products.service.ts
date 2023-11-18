@@ -17,9 +17,6 @@ export class ProductsService {
     private readonly schedulerRegistry: SchedulerRegistry,
     private readonly searchService: SearchService,
   ) {}
-  async create(createProductDto: CreateProductDto) {
-    return await this.productRepository.saveProduct(createProductDto);
-  }
 
   async findAll(limit: number, skip: number) {
     return this.productRepository.findMany(skip || 0, limit || 8);
