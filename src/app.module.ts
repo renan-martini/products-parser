@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { MiddlewareConsumer, Module } from '@nestjs/common';
 import { ProductsModule } from './resources/products/products.module';
 import { MongooseModule } from '@nestjs/mongoose';
 import { ConfigModule } from '@nestjs/config';
@@ -8,6 +8,8 @@ import { ImportHistoryRepository } from './resources/products/repository/importH
 import { HistorySchema } from './resources/products/schemas/history.entity';
 import { HealthService } from './app.service';
 import { SearchModule } from './resources/search/search.module';
+import { AuthModule } from './resources/auth/auth.module';
+import { AuthMiddleware } from './resources/auth/middleware/auth.middleware';
 @Module({
   imports: [
     ConfigModule.forRoot({ envFilePath: '.env', isGlobal: true }),
@@ -18,8 +20,13 @@ import { SearchModule } from './resources/search/search.module';
     MongooseModule.forFeature([{ name: 'history', schema: HistorySchema }]),
     TerminusModule,
     SearchModule,
+    AuthModule,
   ],
   controllers: [HealthController],
   providers: [ImportHistoryRepository, HealthService],
 })
-export class AppModule {}
+export class AppModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer.apply(AuthMiddleware).forRoutes('');
+  }
+}
