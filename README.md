@@ -23,6 +23,7 @@ Link para a apresentação do projeto: [Apresentação](https://drive.google.com
 - TypeScript
 
 ### Instruções para rodar o projeto:
+
 - Criar um banco de dados MongoDB usando Atlas: https://www.mongodb.com/cloud/atlas;
 - Criar uma instancia do elasticsearch em: https://cloud.elastic.co/
 - Clone o projeto na sua maquina;
@@ -36,15 +37,19 @@ Link para a apresentação do projeto: [Apresentação](https://drive.google.com
 ## O desenvolvimento do projeto:
 
 - Problema 1: Encontrar uma forma de baixar os arquivos dinâmicamente com base na lista disponível em: https://challenges.coode.sh/food/data/json/index.txt.
+
   - Solução: Requisitar a lista e iterar sobre ela baixando os arquivos a partir da outra url disponibilizada utilizando streams e um Promise.all() para baixar todos ao mesmo tempo: https://challenges.coode.sh/food/data/json/{filename}
 
 - Problema 2: Descompactar os arquivos baixados.
+
   - Solução: Utilizei o zlib e novamente streams e o Promise.all() para descompactar tudo dinâmicamente.
 
 - Problema 3: Salvar no banco de dados e elasticsearch.
+
   - Solução: Precisei criar um upsertMany para caso não exista a instancia, cria-la. Caso contrário, deveria atualiza-la.
 
 - Problema 4: Criar um CRON para realizar todo esse fluxo diariamente com base em um horario configurado no .env.
+
   - Solução: Para isso, utilizei a lib cron nativa do node para executar o fluxo no horário indicado sempre verificando a ultima vez que realizou essa sincronização para não reexecuta-la em menos de 24 horas.
 
 - Problema 5: Criar o CRUD com base nas instruções do desafio.
@@ -68,7 +73,6 @@ Na REST API temos um CRUD com os seguintes endpoints, caso precise, há a [docum
 - [x] **Diferencial 3** Configurar um sistema de alerta se tem algum falho durante o Sync dos produtos;
 - [x] **Diferencial 4** Descrever a documentação da API utilizando o conceito de Open API 3.0;
 - [x] **Diferencial 5** Escrever Unit Tests para os endpoints GET e PUT do CRUD;
-- [ ] **Diferencial 6** Escrever um esquema de segurança utilizando `API KEY` nos endpoints. Ref: https://learning.postman.com/docs/sending-requests/authorization/#api-key
+- [x] **Diferencial 6** Escrever um esquema de segurança utilizando `API KEY` nos endpoints. Ref: https://learning.postman.com/docs/sending-requests/authorization/#api-key
 
-
->  This is a challenge by [Coodesh](https://coodesh.com/)
+> This is a challenge by [Coodesh](https://coodesh.com/)
