@@ -10,7 +10,7 @@ Foi um projeto bastante desafiador e realmente me sinto um dev melhor após conc
 
 ## Apresentação
 
-Link para a apresentação do projeto: [Apresentação](https://drive.google.com/file/d/1yUNOgMH3BDWbbmptXVJQor2K9X6RlThB/view?usp=drivesdk)
+Link para a apresentação do projeto: [Apresentação](https://www.loom.com/share/5ac5982fc88c43c2a1711de932b66c9e?sid=e6425244-c791-44e4-9eb5-c436b58978ee)
 
 ## Tecnologias utilizadas:
 
@@ -28,6 +28,7 @@ Link para a apresentação do projeto: [Apresentação](https://drive.google.com
 - Criar uma instancia do elasticsearch em: https://cloud.elastic.co/
 - Clone o projeto na sua maquina;
 - Crie um arquivo `.env` com base no arquivo [.env.example](./.env.example);
+- Lembre-se de configurar o insomnia ou postman para utilizar a apiKey que você configurou no passo anterior
 - Se tiver o node instalado:
   - Rode `npm i` para instalar as dependências do projeto;
   - Rode `npm run start:dev` para iniciar o projeto;
