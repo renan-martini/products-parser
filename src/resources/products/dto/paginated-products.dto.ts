@@ -9,9 +9,9 @@ export class PaginatedProductsDto {
   @ApiProperty()
   status: number;
   @ApiProperty()
-  nextPage: `/products?skip=${number}&limit=${number}`;
+  nextPage: string;
   @ApiProperty()
-  lastPage?: `/products?skip=${number}&limit=${number}`;
+  lastPage?: string;
   @ApiProperty({
     type: 'array',
     items: { $ref: getSchemaPath(CreateProductDto) },
