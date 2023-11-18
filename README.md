@@ -10,7 +10,7 @@ Foi um projeto bastante desafiador e realmente me sinto um dev melhor após conc
 
 ## Apresentação
 
-Link para a apresentação do projeto: []()
+Link para a apresentação do projeto: [Apresentação](https://drive.google.com/file/d/1yUNOgMH3BDWbbmptXVJQor2K9X6RlThB/view?usp=drivesdk)
 
 ## Tecnologias utilizadas:
 
