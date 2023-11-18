@@ -1,0 +1,26 @@
+version: '3.7'
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: products-parser-docker
+    command: "sh -c 'npm run start:dev'"
+    # container name
+    container_name: products-parser
+    # always restart the container if it stops.
+    restart: always
+    # docker run -t is allow
+    tty: true
+    # application port, this is take value from env file
+    ports:
+      - '${SERVER_PORT}:${SERVER_PORT}'
+    # working directory
+    working_dir: /app
+    # application environment
+    env_file:
+      - .env
+    # save (persist) data and also to share data between containers
+    volumes:
+      - ./:/app
+      - /app/node_modules
