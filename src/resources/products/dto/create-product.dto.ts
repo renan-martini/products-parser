@@ -134,6 +134,8 @@ export class CreateProductDto {
     Object.assign(this, {
       ...partial,
       code: parseInt(partial?.code?.toString().replace('"', '')),
+      status: partial.status || 'published',
+      imported_t: new Date(),
     });
   }
 }

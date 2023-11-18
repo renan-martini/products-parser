@@ -1,73 +1,74 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="200" alt="Nest Logo" /></a>
-</p>
+# Backend Challenge 20230105 - Products Parser
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+## Introdução
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+Nesse desafio o objetivo era desenvolver uma REST API para utilizar os dados do projeto Open Food Facts, que é um banco de dados aberto com informação nutricional de diversos produtos alimentícios.
 
-## Description
+O projeto visa dar suporte a equipe de nutricionistas da empresa Fitness Foods LC para que eles possam revisar de maneira rápida a informação nutricional dos alimentos que os usuários publicam pela aplicação móvel.
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+Foi um projeto bastante desafiador e realmente me sinto um dev melhor após conclui-lo. Trabalhei inúmeros pontos que não desenvolvia a tempos e me submergi em longas horas desenvolvendo todo o fluxo de importação de produtos para que ficasse o melhor que conseguisse entregar nesses 5 dias e com certeza ainda refinarei minha lógica após a correção.
 
-## Installation
+## Apresentação
 
-```bash
-$ npm install
-```
+Link para a apresentação do projeto: []()
 
-## Running the app
+## Tecnologias utilizadas:
 
-```bash
-# development
-$ npm run start
+- NestJS
+- MongoDB
+- ElasticSearch
+- Docker
+- JavaScript
+- NodeJS
+- TypeScript
 
-# watch mode
-$ npm run start:dev
+### Instruções para rodar o projeto:
+- Criar um banco de dados MongoDB usando Atlas: https://www.mongodb.com/cloud/atlas;
+- Criar uma instancia do elasticsearch em: https://cloud.elastic.co/
+- Clone o projeto na sua maquina;
+- Crie um arquivo `.env` com base no arquivo [.env.example](./.env.example);
+- Se tiver o node instalado:
+  - Rode `npm i` para instalar as dependências do projeto;
+  - Rode `npm run start:dev` para iniciar o projeto;
+- Caso prefira, existe um [docker-compose](./docker-compose.yml) e portanto, também funciona:
+  - Rode `docker compose up --build` ou `docker-compose up --build` a depender da sua versão do docker.
 
-# production mode
-$ npm run start:prod
-```
+## O desenvolvimento do projeto:
 
-## Test
+- Problema 1: Encontrar uma forma de baixar os arquivos dinâmicamente com base na lista disponível em: https://challenges.coode.sh/food/data/json/index.txt.
+  - Solução: Requisitar a lista e iterar sobre ela baixando os arquivos a partir da outra url disponibilizada utilizando streams e um Promise.all() para baixar todos ao mesmo tempo: https://challenges.coode.sh/food/data/json/{filename}
 
-```bash
-# unit tests
-$ npm run test
+- Problema 2: Descompactar os arquivos baixados.
+  - Solução: Utilizei o zlib e novamente streams e o Promise.all() para descompactar tudo dinâmicamente.
 
-# e2e tests
-$ npm run test:e2e
+- Problema 3: Salvar no banco de dados e elasticsearch.
+  - Solução: Precisei criar um upsertMany para caso não exista a instancia, cria-la. Caso contrário, deveria atualiza-la.
 
-# test coverage
-$ npm run test:cov
-```
+- Problema 4: Criar um CRON para realizar todo esse fluxo diariamente com base em um horario configurado no .env.
+  - Solução: Para isso, utilizei a lib cron nativa do node para executar o fluxo no horário indicado sempre verificando a ultima vez que realizou essa sincronização para não reexecuta-la em menos de 24 horas.
 
-## Support
+- Problema 5: Criar o CRUD com base nas instruções do desafio.
+  - Solução: No geral, não teve grandes dificuldades aqui, apenas trabalhar com os dados da melhor maneira possível e finalizar o desenvolvimento.
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+### A REST API
 
-## Stay in touch
+Na REST API temos um CRUD com os seguintes endpoints, caso precise, há a [documentação](http://localhost:3000/api):
 
-- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+- `GET /`: Detalhes da API, se conexão leitura e escritura com a base de dados está OK, horário da última vez que o CRON foi executado, tempo online e uso de memória.
+- `PUT /products/:code`: Será responsável por receber atualizações do Projeto Web
+- `DELETE /products/:code`: Mudar o status do produto para `trash`
+- `GET /products/:code`: Obter a informação somente de um produto da base de dados
+- `GET /products`: Listar todos os produtos da base de dados, adicionar sistema de paginação para não sobrecarregar o `REQUEST`.
+- `GET /search/products?search=rose`: Lista os produtos da base de dados com base na pesquisa por texto utilizando o elasticsearch.
 
-## License
+## Extras Concluidos:
 
-Nest is [MIT licensed](LICENSE).
+- [x] **Diferencial 1** Configuração de um endpoint de busca com Elastic Search ou similares;
+- [x] **Diferencial 2** Configurar Docker no Projeto para facilitar o Deploy da equipe de DevOps;
+- [x] **Diferencial 3** Configurar um sistema de alerta se tem algum falho durante o Sync dos produtos;
+- [x] **Diferencial 4** Descrever a documentação da API utilizando o conceito de Open API 3.0;
+- [x] **Diferencial 5** Escrever Unit Tests para os endpoints GET e PUT do CRUD;
+- [ ] **Diferencial 6** Escrever um esquema de segurança utilizando `API KEY` nos endpoints. Ref: https://learning.postman.com/docs/sending-requests/authorization/#api-key
+
+
+>  This is a challenge by [Coodesh](https://coodesh.com/)
