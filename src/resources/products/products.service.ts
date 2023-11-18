@@ -46,7 +46,10 @@ export class ProductsService {
     const mostRecentImport = await this.importHistoryRepository.getMostRecent();
 
     //Veriry if its been more than 1 day without being updated when the api starts
-    if (TimeUtility.hoursBetween(mostRecentImport.datetime, new Date()) >= 24) {
+    if (
+      !mostRecentImport ||
+      TimeUtility.hoursBetween(mostRecentImport.datetime, new Date()) >= 24
+    ) {
       await DataProcessor.processData(
         this.productRepository,
         this.importHistoryRepository,
@@ -84,5 +87,8 @@ export class ProductsService {
   async onModuleInit() {
     this.saveData();
     this.createCronJob();
+
+    //this.productRepository.clearCollection();
+    //this.searchService.removeAll();
   }
 }

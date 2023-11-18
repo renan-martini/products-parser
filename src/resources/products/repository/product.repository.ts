@@ -37,9 +37,8 @@ export class ProductRepository {
   }
 
   async delete(code: number) {
-    const product = await this.productModel
-      .updateOne({ code }, { status: 'trash' })
-      .findOne({ code });
+    await this.productModel.findOneAndUpdate({ code }, { status: 'trash' });
+    const product = await this.productModel.findOne({ code });
     return product;
   }
 

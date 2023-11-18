@@ -5,6 +5,7 @@ services:
       context: .
       dockerfile: Dockerfile
     image: products-parser-docker
+    command: "sh -c 'npm run start:dev'"
     # container name
     container_name: products-parser
     # always restart the container if it stops.
@@ -15,11 +16,11 @@ services:
     ports:
       - '${SERVER_PORT}:${SERVER_PORT}'
     # working directory
-    working_dir: /var/www/products-parser
+    working_dir: /app
     # application environment
     env_file:
       - .env
     # save (persist) data and also to share data between containers
     volumes:
-      - ./:/var/www/products-parser
-      - /var/www/products-parser/node_modules
+      - ./:/app
+      - /app/node_modules
