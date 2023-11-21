@@ -15,7 +15,7 @@ import { AuthMiddleware } from './resources/auth/middleware/auth.middleware';
     ConfigModule.forRoot({ envFilePath: '.env', isGlobal: true }),
     ProductsModule,
     MongooseModule.forRoot(
-      `mongodb+srv://${process.env.MONGO_USERNAME}:${process.env.MONGO_PASS}@cluster0.ku3maxu.mongodb.net/?retryWrites=true&w=majority`,
+      `mongodb+srv://${process.env.MONGO_USERNAME}:${process.env.MONGO_PASS}@${process.env.MONGO_CLUSTER}.mongodb.net/?retryWrites=true&w=majority`,
     ),
     MongooseModule.forFeature([{ name: 'history', schema: HistorySchema }]),
     TerminusModule,
